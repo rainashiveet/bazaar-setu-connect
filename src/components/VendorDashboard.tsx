@@ -12,7 +12,7 @@ import { WeatherWidget } from '@/components/WeatherWidget';
 import { SmartBuyingAdvice } from '@/components/SmartBuyingAdvice';
 import { ReferEarn } from '@/components/ReferEarn';
 import { VoiceOrder } from '@/components/VoiceOrder';
-import { GroupBuyMap } from '@/components/GroupBuyMap';
+import GroupBuyMap from '@/components/GroupBuyMap';
 import { NotificationCenter } from '@/components/NotificationCenter';
 import { ProfileDropdown } from '@/components/ProfileDropdown';
 

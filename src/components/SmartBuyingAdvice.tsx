@@ -44,7 +44,7 @@ const getSmartAdvice = (weather: any): SmartAdvice => {
     avoidStocking: []
   };
 
-  // High humidity logic
+  // High humidity logic (>75%)
   if (weather.humidity > 75) {
     advice.avoidStocking.push({
       id: 'tomatoes',
@@ -64,9 +64,36 @@ const getSmartAdvice = (weather: any): SmartAdvice => {
       emoji: '🥬',
       risk: 'medium'
     });
+    advice.avoidStocking.push({
+      id: 'onions',
+      name: 'प्याज',
+      nameEn: 'Onions',
+      reason: 'नमी में अंकुरण की समस्या',
+      reasonEn: 'Sprouting issues in humidity',
+      emoji: '🧅',
+      risk: 'medium'
+    });
+    advice.avoidStocking.push({
+      id: 'potatoes',
+      name: 'आलू',
+      nameEn: 'Potatoes',
+      reason: 'नमी में हरे हो जाते हैं',
+      reasonEn: 'Turn green in humidity',
+      emoji: '🥔',
+      risk: 'medium'
+    });
+    advice.buyInBulk.push({
+      id: 'dry-spices',
+      name: 'सूखे मसाले',
+      nameEn: 'Dry Spices',
+      reason: 'नमी में भी टिकाऊ रहते हैं',
+      reasonEn: 'Stay fresh even in humidity',
+      emoji: '🌶️',
+      priority: 'medium'
+    });
   }
 
-  // Hot weather logic
+  // Hot weather logic (>30°C)
   if (weather.temperature > 30) {
     advice.buyInBulk.push({
       id: 'kulfi-ice',
@@ -86,6 +113,42 @@ const getSmartAdvice = (weather: any): SmartAdvice => {
       emoji: '🥤',
       priority: 'high'
     });
+    advice.buyInBulk.push({
+      id: 'watermelon',
+      name: 'तरबूज',
+      nameEn: 'Watermelon',
+      reason: 'गर्मी में अच्छी मांग',
+      reasonEn: 'High demand in summer',
+      emoji: '🍉',
+      priority: 'high'
+    });
+    advice.buyInBulk.push({
+      id: 'cucumber',
+      name: 'खीरा',
+      nameEn: 'Cucumber',
+      reason: 'ठंडक देता है, अच्छी बिक्री',
+      reasonEn: 'Cooling effect, good sales',
+      emoji: '🥒',
+      priority: 'medium'
+    });
+    advice.buyInBulk.push({
+      id: 'mint-coriander',
+      name: 'पुदीना/धनिया',
+      nameEn: 'Mint/Coriander',
+      reason: 'चटनी और शरबत की मांग',
+      reasonEn: 'Demand for chutneys and drinks',
+      emoji: '🌿',
+      priority: 'medium'
+    });
+    advice.buyInBulk.push({
+      id: 'lemons',
+      name: 'नींबू',
+      nameEn: 'Lemons',
+      reason: 'नींबू पानी की मांग बढ़ती है',
+      reasonEn: 'Lemonade demand increases',
+      emoji: '🍋',
+      priority: 'high'
+    });
     advice.avoidStocking.push({
       id: 'chocolate',
       name: 'चॉकलेट',
@@ -93,6 +156,24 @@ const getSmartAdvice = (weather: any): SmartAdvice => {
       reason: 'गर्मी में पिघल जाएगी',
       reasonEn: 'Will melt in heat',
       emoji: '🍫',
+      risk: 'high'
+    });
+    advice.avoidStocking.push({
+      id: 'dairy-products',
+      name: 'दूध उत्पाद',
+      nameEn: 'Dairy Products',
+      reason: 'गर्मी में जल्दी खराब हो जाते हैं',
+      reasonEn: 'Spoil quickly in heat',
+      emoji: '🥛',
+      risk: 'high'
+    });
+    advice.avoidStocking.push({
+      id: 'meat',
+      name: 'मांस/मछली',
+      nameEn: 'Meat/Fish',
+      reason: 'गर्मी में संक्रमण का खतरा',
+      reasonEn: 'Infection risk in heat',
+      emoji: '🐟',
       risk: 'high'
     });
   }
@@ -117,9 +198,54 @@ const getSmartAdvice = (weather: any): SmartAdvice => {
       emoji: '🥙',
       priority: 'medium'
     });
+    advice.buyInBulk.push({
+      id: 'corn',
+      name: 'भुट्टा',
+      nameEn: 'Corn',
+      reason: 'बारिश में भुट्टा खाने का मूड',
+      reasonEn: 'Perfect weather for roasted corn',
+      emoji: '🌽',
+      priority: 'high'
+    });
+    advice.buyInBulk.push({
+      id: 'samosa-ingredients',
+      name: 'समोसा सामग्री',
+      nameEn: 'Samosa Ingredients',
+      reason: 'बारिश में गर्म नाश्ते की मांग',
+      reasonEn: 'Hot snacks in demand',
+      emoji: '🥟',
+      priority: 'medium'
+    });
+    advice.buyInBulk.push({
+      id: 'hot-soup',
+      name: 'सूप सामग्री',
+      nameEn: 'Soup Ingredients',
+      reason: 'गर्म सूप की मांग बढ़ती है',
+      reasonEn: 'Hot soup demand increases',
+      emoji: '🍲',
+      priority: 'medium'
+    });
+    advice.avoidStocking.push({
+      id: 'street-chaat',
+      name: 'स्ट्रीट चाट',
+      nameEn: 'Street Chaat',
+      reason: 'बारिश में स्वच्छता की समस्या',
+      reasonEn: 'Hygiene issues in rain',
+      emoji: '🥗',
+      risk: 'high'
+    });
+    advice.avoidStocking.push({
+      id: 'fresh-fruits',
+      name: 'ताजे फल',
+      nameEn: 'Fresh Fruits',
+      reason: 'बारिश में जल्दी खराब हो जाते हैं',
+      reasonEn: 'Spoil quickly in rain',
+      emoji: '🍎',
+      risk: 'medium'
+    });
   }
 
-  // Cool weather logic
+  // Cool weather logic (<25°C)
   if (weather.temperature < 25) {
     advice.buyInBulk.push({
       id: 'winter-vegetables',
@@ -129,6 +255,82 @@ const getSmartAdvice = (weather: any): SmartAdvice => {
       reasonEn: 'Better quality in cool weather',
       emoji: '🥕',
       priority: 'medium'
+    });
+    advice.buyInBulk.push({
+      id: 'hot-tea-coffee',
+      name: 'चाय/कॉफी',
+      nameEn: 'Tea/Coffee',
+      reason: 'ठंड में गर्म पेय की मांग',
+      reasonEn: 'Hot beverages in demand',
+      emoji: '☕',
+      priority: 'high'
+    });
+    advice.buyInBulk.push({
+      id: 'jaggery',
+      name: 'गुड़',
+      nameEn: 'Jaggery',
+      reason: 'सर्दी में गुड़ की चाय पसंद',
+      reasonEn: 'Jaggery tea preferred in winter',
+      emoji: '🍯',
+      priority: 'medium'
+    });
+    advice.buyInBulk.push({
+      id: 'groundnuts',
+      name: 'मूंगफली',
+      nameEn: 'Groundnuts',
+      reason: 'सर्दी में मूंगफली की अच्छी मांग',
+      reasonEn: 'Good demand for groundnuts',
+      emoji: '🥜',
+      priority: 'medium'
+    });
+    advice.buyInBulk.push({
+      id: 'sweet-potato',
+      name: 'शकरकंद',
+      nameEn: 'Sweet Potato',
+      reason: 'सर्दी में भुना शकरकंद पसंद',
+      reasonEn: 'Roasted sweet potato popular',
+      emoji: '🍠',
+      priority: 'medium'
+    });
+    advice.buyInBulk.push({
+      id: 'carrots-radish',
+      name: 'गाजर/मूली',
+      nameEn: 'Carrots/Radish',
+      reason: 'सर्दी की मुख्य सब्जियां',
+      reasonEn: 'Main winter vegetables',
+      emoji: '🥕',
+      priority: 'medium'
+    });
+    advice.avoidStocking.push({
+      id: 'ice-items',
+      name: 'बर्फ वाली चीजें',
+      nameEn: 'Ice Items',
+      reason: 'ठंड में मांग कम होती है',
+      reasonEn: 'Low demand in cold weather',
+      emoji: '🧊',
+      risk: 'medium'
+    });
+  }
+
+  // Very hot weather (>35°C)
+  if (weather.temperature > 35) {
+    advice.buyInBulk.push({
+      id: 'coconut-water',
+      name: 'नारियल पानी',
+      nameEn: 'Coconut Water',
+      reason: 'तेज गर्मी में बेहतरीन मांग',
+      reasonEn: 'Excellent demand in extreme heat',
+      emoji: '🥥',
+      priority: 'high'
+    });
+    advice.buyInBulk.push({
+      id: 'sugarcane-juice',
+      name: 'गन्ने का रस',
+      nameEn: 'Sugarcane Juice',
+      reason: 'गर्मी में सबसे ज्यादा मांग',
+      reasonEn: 'Highest demand in heat',
+      emoji: '🧃',
+      priority: 'high'
     });
   }
 

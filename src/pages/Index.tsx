@@ -1,13 +1,42 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { LanguageToggle } from "@/components/LanguageToggle";
+import { LandingPage } from "@/components/LandingPage";
+import { LoginForm } from "@/components/LoginForm";
+import { VendorDashboard } from "@/components/VendorDashboard";
+import { SupplierDashboard } from "@/components/SupplierDashboard";
+
+const AppContent = () => {
+  const { isAuthenticated, user } = useAuth();
+  const [selectedUserType, setSelectedUserType] = useState<'vendor' | 'supplier' | null>(null);
+
+  if (isAuthenticated && user) {
+    return user.type === 'vendor' ? <VendorDashboard /> : <SupplierDashboard />;
+  }
+
+  if (selectedUserType) {
+    return (
+      <LoginForm 
+        userType={selectedUserType} 
+        onBack={() => setSelectedUserType(null)} 
+      />
+    );
+  }
+
+  return <LandingPage onSelectUserType={setSelectedUserType} />;
+};
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <LanguageProvider>
+      <AuthProvider>
+        <div className="relative">
+          <LanguageToggle />
+          <AppContent />
+        </div>
+      </AuthProvider>
+    </LanguageProvider>
   );
 };
 

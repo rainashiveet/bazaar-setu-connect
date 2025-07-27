@@ -1,31 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { Icon } from 'leaflet';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Clock, Users, MapPin, ShoppingCart, Timer } from "lucide-react";
 import { toast } from "sonner";
-import 'leaflet/dist/leaflet.css';
-
-// Fix for default markers in react-leaflet
-import L from 'leaflet';
-
-// Import marker images explicitly
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
-// Delete the default icon to prevent conflicts
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-
-// Set the default icon
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
 
 interface GroupOrder {
   id: string;
@@ -158,9 +137,6 @@ const CountdownTimer: React.FC<{ expiresAt: Date }> = ({ expiresAt }) => {
 const GroupBuyMap: React.FC = () => {
   const { language } = useLanguage();
   const [selectedOrder, setSelectedOrder] = useState<GroupOrder | null>(null);
-  const [userLocation] = useState({ lat: 28.6139, lng: 77.2090 }); // Mock user location
-
-  const mapCenter = useMemo(() => [userLocation.lat, userLocation.lng] as [number, number], [userLocation]);
 
   const handleJoinOrder = (order: GroupOrder) => {
     toast.success(language === 'hi' 
@@ -179,7 +155,7 @@ const GroupBuyMap: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Map Container */}
+      {/* Group Orders List */}
       <Card className="shadow-warm">
         <CardHeader className="bg-gradient-primary text-primary-foreground rounded-t-lg">
           <CardTitle className="flex items-center gap-2 text-xl">
@@ -187,77 +163,70 @@ const GroupBuyMap: React.FC = () => {
             {language === 'hi' ? 'पास के ग्रुप ऑर्डर' : 'Nearby Group Orders'}
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-0">
-          <div className="h-96 w-full relative">
-            <MapContainer
-              center={mapCenter}
-              zoom={12}
-              style={{ height: '100%', width: '100%' }}
-              className="rounded-b-lg"
-            >
-              <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              />
-              
-              {mockGroupOrders.map((order) => (
-                <Marker
-                  key={order.id}
-                  position={[order.location.lat, order.location.lng]}
-                >
-                  <Popup>
-                    <div className="space-y-3 min-w-64">
-                      <h3 className="font-semibold text-sm">
-                        {language === 'hi' ? order.title : order.titleEn}
-                      </h3>
-                      <p className="text-xs text-muted-foreground">
-                        {language === 'hi' ? order.description : order.descriptionEn}
-                      </p>
-                      
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="flex items-center gap-1">
-                          <Users className="w-3 h-3" />
-                          {order.participants}
-                        </span>
-                        <CountdownTimer expiresAt={order.expiresAt} />
+        <CardContent className="p-4">
+          <div className="grid gap-4">
+            {mockGroupOrders.map((order) => (
+              <Card key={order.id} className="border-2 hover:border-primary/30 transition-all duration-300">
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-semibold text-lg">
+                          {language === 'hi' ? order.title : order.titleEn}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {language === 'hi' ? order.description : order.descriptionEn}
+                        </p>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
+                          <MapPin className="w-3 h-3" />
+                          {language === 'hi' ? order.location.address : order.location.addressEn}
+                        </p>
                       </div>
-                      
-                      <div className="space-y-2">
-                        <div className="text-xs">
-                          {language === 'hi' ? 'प्रगति:' : 'Progress:'} {order.currentQuantity}/{order.minQuantity}
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-2">
-                          <div 
-                            className="bg-primary h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${getProgressPercentage(order.currentQuantity, order.minQuantity)}%` }}
-                          />
-                        </div>
+                      <CountdownTimer expiresAt={order.expiresAt} />
+                    </div>
+                    
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="flex items-center gap-1">
+                        <Users className="w-4 h-4" />
+                        {order.participants} {language === 'hi' ? 'सदस्य' : 'members'}
+                      </span>
+                      <span className="text-muted-foreground">
+                        {language === 'hi' ? 'बचत:' : 'Savings:'} {order.estimatedSavings}
+                      </span>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="text-sm">
+                        {language === 'hi' ? 'प्रगति:' : 'Progress:'} {order.currentQuantity}/{order.minQuantity}
                       </div>
-                      
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="vendor"
-                          onClick={() => handleJoinOrder(order)}
-                          className="text-xs"
-                        >
-                          <ShoppingCart className="w-3 h-3 mr-1" />
-                          {language === 'hi' ? 'शामिल हों' : 'Join'}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleViewDetails(order)}
-                          className="text-xs"
-                        >
-                          {language === 'hi' ? 'विवरण' : 'Details'}
-                        </Button>
+                      <div className="w-full bg-muted rounded-full h-2">
+                        <div 
+                          className="bg-primary h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${getProgressPercentage(order.currentQuantity, order.minQuantity)}%` }}
+                        />
                       </div>
                     </div>
-                  </Popup>
-                </Marker>
-              ))}
-            </MapContainer>
+                    
+                    <div className="flex gap-2">
+                      <Button
+                        variant="vendor"
+                        onClick={() => handleJoinOrder(order)}
+                        className="flex-1"
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        {language === 'hi' ? 'शामिल हों' : 'Join'}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => handleViewDetails(order)}
+                      >
+                        {language === 'hi' ? 'विवरण' : 'Details'}
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </CardContent>
       </Card>

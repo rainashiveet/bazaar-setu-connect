@@ -56,18 +56,33 @@ export const VoiceOrder: React.FC<VoiceOrderProps> = ({ onClose }) => {
   }, [isListening, language]);
 
   const processVoiceOrder = (text: string) => {
-    // Mock processing - in real app, this would use AI to parse the voice input
-    const mockItems = [
-      { id: 101, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg' },
-      { id: 102, name: 'आलू', nameEn: 'Potatoes', price: '₹20/kg' },
-      { id: 103, name: 'टमाटर', nameEn: 'Tomatoes', price: '₹30/kg' },
-      { id: 104, name: 'तेल', nameEn: 'Oil', price: '₹120/L' },
-      { id: 105, name: 'आटा', nameEn: 'Flour', price: '₹35/kg' },
+    // Enhanced AI-like processing to match voice input more accurately
+    const allItems = [
+      { id: 101, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg', keywords: ['प्याज', 'onion', 'onions', 'pyaaz'] },
+      { id: 102, name: 'आलू', nameEn: 'Potatoes', price: '₹20/kg', keywords: ['आलू', 'potato', 'potatoes', 'aloo'] },
+      { id: 103, name: 'टमाटर', nameEn: 'Tomatoes', price: '₹30/kg', keywords: ['टमाटर', 'tomato', 'tomatoes', 'tamatar'] },
+      { id: 104, name: 'तेल', nameEn: 'Oil', price: '₹120/L', keywords: ['तेल', 'oil', 'cooking oil', 'tel'] },
+      { id: 105, name: 'आटा', nameEn: 'Flour', price: '₹35/kg', keywords: ['आटा', 'flour', 'wheat flour', 'atta'] },
+      { id: 106, name: 'चावल', nameEn: 'Rice', price: '₹45/kg', keywords: ['चावल', 'rice', 'basmati', 'chawal'] },
+      { id: 107, name: 'दाल', nameEn: 'Lentils', price: '₹80/kg', keywords: ['दाल', 'lentils', 'dal', 'pulses'] },
+      { id: 108, name: 'चीनी', nameEn: 'Sugar', price: '₹40/kg', keywords: ['चीनी', 'sugar', 'cheeni'] },
     ];
 
-    // Add 2-3 random items based on voice input
-    const numItems = Math.floor(Math.random() * 3) + 1;
-    const itemsToAdd = mockItems.slice(0, numItems);
+    // Smart matching based on voice transcript
+    const lowerText = text.toLowerCase();
+    const matchedItems: any[] = [];
+    
+    allItems.forEach(item => {
+      const isMatched = item.keywords.some(keyword => 
+        lowerText.includes(keyword.toLowerCase())
+      );
+      if (isMatched) {
+        matchedItems.push(item);
+      }
+    });
+
+    // If no matches found, add some common items
+    const itemsToAdd = matchedItems.length > 0 ? matchedItems : allItems.slice(0, 2);
     
     itemsToAdd.forEach(item => {
       addToCart(item);
@@ -75,8 +90,8 @@ export const VoiceOrder: React.FC<VoiceOrderProps> = ({ onClose }) => {
 
     toast.success(
       language === 'hi' 
-        ? `${itemsToAdd.length} आइटम कार्ट में जोड़े गए!`
-        : `${itemsToAdd.length} items added to cart!`
+        ? `${itemsToAdd.length} आइटम कार्ट में जोड़े गए! ${itemsToAdd.map(i => i.name).join(', ')}`
+        : `${itemsToAdd.length} items added to cart! ${itemsToAdd.map(i => i.nameEn).join(', ')}`
     );
   };
 
@@ -135,15 +150,28 @@ export const VoiceOrder: React.FC<VoiceOrderProps> = ({ onClose }) => {
                 size="lg"
                 onClick={isListening ? stopListening : startListening}
                 disabled={isProcessing}
-                className="w-32 h-32 rounded-full text-lg"
+                className="w-32 h-32 rounded-full text-lg transition-all duration-300 hover:scale-105 shadow-warm"
               >
                 {isListening ? (
-                  <Square className="w-12 h-12" />
+                  <Square className="w-12 h-12 animate-pulse" />
                 ) : (
                   <Mic className="w-12 h-12" />
                 )}
               </Button>
             </div>
+
+            {/* Visual feedback for listening */}
+            {isListening && (
+              <div className="mb-4 flex justify-center">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-8 bg-primary rounded-full animate-pulse"></div>
+                  <div className="w-2 h-6 bg-primary/70 rounded-full animate-pulse" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-10 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-4 bg-primary/70 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                  <div className="w-2 h-7 bg-primary rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              </div>
+            )}
 
             <p className="text-sm text-muted-foreground mb-4">
               {language === 'hi' 

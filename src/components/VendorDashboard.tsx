@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import GroupBuyMap from "./GroupBuyMap";
 import { Cart } from "./Cart";
 import { VoiceOrder } from "./VoiceOrder";
+import { NotificationCenter } from "./NotificationCenter";
 
 const suggestedItems = [
   { id: 1, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg', trending: true, discount: '10% off' },
@@ -41,6 +42,7 @@ export const VendorDashboard = () => {
   const { addToCart, getTotalItems } = useCart();
   const [showVoiceOrder, setShowVoiceOrder] = useState(false);
   const [showGroupBuy, setShowGroupBuy] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   // Listen for custom events to close modals
   React.useEffect(() => {
@@ -105,8 +107,16 @@ export const VendorDashboard = () => {
                 </span>
               )}
             </Button>
-            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setShowNotifications(true)}
+              className="text-primary-foreground hover:bg-white/20 relative"
+            >
               <Bell className="w-5 h-5" />
+              <span className="absolute -top-1 -right-1 bg-warning text-warning-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                3
+              </span>
             </Button>
             <Button 
               variant="ghost" 
@@ -196,6 +206,9 @@ export const VendorDashboard = () => {
 
         {/* Voice Order Modal */}
         {showVoiceOrder && <VoiceOrder onClose={() => setShowVoiceOrder(false)} />}
+
+        {/* Notification Center Modal */}
+        {showNotifications && <NotificationCenter onClose={() => setShowNotifications(false)} />}
 
         {/* Cart */}
         <Cart />

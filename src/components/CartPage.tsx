@@ -1,61 +1,28 @@
-import React, { useState } from 'react';
-import { Minus, Plus, Trash2, ShoppingBag, CreditCard, Wallet } from 'lucide-react';
+import React from 'react';
+import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { toast } from 'sonner';
-import { initiatePayment, mockPayment } from '@/services/paymentService';
 
 export const CartPage: React.FC = () => {
   const { language } = useLanguage();
   const { items, removeFromCart, updateQuantity, clearCart, getTotalPrice } = useCart();
-  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleCheckout = () => {
+  const handlePlaceOrder = () => {
     if (items.length === 0) {
       toast.error(language === 'hi' ? 'कार्ट खाली है!' : 'Cart is empty!');
       return;
     }
-    setIsPaymentDialogOpen(true);
-  };
-
-  const processPayment = async (method: 'razorpay' | 'mock') => {
-    setIsProcessing(true);
-    const totalAmount = getTotalPrice();
     
-    try {
-      let success = false;
-      
-      if (method === 'razorpay') {
-        success = await initiatePayment({
-          amount: totalAmount,
-          description: `Order for ${items.length} items`,
-          prefill: {
-            name: 'Customer',
-            email: 'customer@example.com',
-            contact: '9999999999'
-          }
-        });
-      } else {
-        success = await mockPayment(totalAmount);
-      }
-
-      if (success) {
-        toast.success(language === 'hi' ? 'भुगतान सफल! ऑर्डर प्लेस किया गया!' : 'Payment successful! Order placed!');
-        clearCart();
-        setIsPaymentDialogOpen(false);
-      } else {
-        toast.error(language === 'hi' ? 'भुगतान असफल!' : 'Payment failed!');
-      }
-    } catch (error) {
-      toast.error(language === 'hi' ? 'भुगतान में त्रुटि!' : 'Payment error!');
-    } finally {
-      setIsProcessing(false);
-    }
+    toast.success(
+      language === 'hi' 
+        ? `₹${getTotalPrice().toFixed(2)} का ऑर्डर प्लेस किया गया!` 
+        : `Order placed for ₹${getTotalPrice().toFixed(2)}!`
+    );
+    clearCart();
   };
 
   const formatPrice = (price: string) => {
@@ -179,59 +146,15 @@ export const CartPage: React.FC = () => {
               <span>₹{getTotalPrice().toFixed(2)}</span>
             </div>
             
-            <Dialog open={isPaymentDialogOpen} onOpenChange={setIsPaymentDialogOpen}>
-              <DialogTrigger asChild>
-                <Button 
-                  className="w-full mt-4" 
-                  onClick={handleCheckout}
-                  size="lg"
-                >
-                  {language === 'hi' 
-                    ? `₹${getTotalPrice().toFixed(2)} - ऑर्डर करें` 
-                    : `Place Order - ₹${getTotalPrice().toFixed(2)}`}
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>
-                    {language === 'hi' ? 'भुगतान विधि चुनें' : 'Choose Payment Method'}
-                  </DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 pt-4">
-                  <div className="text-center mb-4">
-                    <p className="text-sm text-muted-foreground">
-                      {language === 'hi' ? 'कुल राशि:' : 'Total Amount:'}
-                    </p>
-                    <p className="text-2xl font-bold">₹{getTotalPrice().toFixed(2)}</p>
-                  </div>
-                  
-                  <Button
-                    className="w-full h-12"
-                    onClick={() => processPayment('razorpay')}
-                    disabled={isProcessing}
-                  >
-                    <CreditCard className="h-5 w-5 mr-2" />
-                    {language === 'hi' ? 'Razorpay से भुगतान करें' : 'Pay with Razorpay'}
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    className="w-full h-12"
-                    onClick={() => processPayment('mock')}
-                    disabled={isProcessing}
-                  >
-                    <Wallet className="h-5 w-5 mr-2" />
-                    {language === 'hi' ? 'डेमो भुगतान' : 'Demo Payment'}
-                  </Button>
-                  
-                  {isProcessing && (
-                    <p className="text-center text-sm text-muted-foreground">
-                      {language === 'hi' ? 'भुगतान प्रक्रिया में...' : 'Processing payment...'}
-                    </p>
-                  )}
-                </div>
-              </DialogContent>
-            </Dialog>
+            <Button 
+              className="w-full mt-4" 
+              onClick={handlePlaceOrder}
+              size="lg"
+            >
+              {language === 'hi' 
+                ? `₹${getTotalPrice().toFixed(2)} - ऑर्डर करें` 
+                : `Place Order - ₹${getTotalPrice().toFixed(2)}`}
+            </Button>
           </CardContent>
         </Card>
 

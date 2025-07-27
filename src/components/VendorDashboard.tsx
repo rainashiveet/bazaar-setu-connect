@@ -11,9 +11,11 @@ import {
   Bell,
   Star,
   Package,
-  LogOut
+  LogOut,
+  Map
 } from "lucide-react";
 import { toast } from "sonner";
+import GroupBuyMap from "./GroupBuyMap";
 
 const suggestedItems = [
   { id: 1, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg', trending: true, discount: '10% off' },
@@ -151,6 +153,9 @@ export const VendorDashboard = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Group Buy Map */}
+        <GroupBuyMap />
 
         {/* Recent Orders - Quick Reorder */}
         <Card className="shadow-warm">

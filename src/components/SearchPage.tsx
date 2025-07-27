@@ -88,13 +88,17 @@ export const SearchPage: React.FC<SearchPageProps> = ({ onVoiceOrder }) => {
   }, [searchQuery, selectedCategory]);
 
   const handleAddToCart = (item: typeof allItems[0]) => {
-    addToCart({
-      id: item.id,
-      name: item.name,
-      nameEn: item.nameEn,
-      price: item.price
-    });
-    toast.success(language === 'hi' ? 'कार्ट में जोड़ा गया!' : 'Added to cart!');
+    try {
+      addToCart({
+        id: item.id,
+        name: item.name,
+        nameEn: item.nameEn,
+        price: item.price
+      });
+      toast.success(language === 'hi' ? 'कार्ट में जोड़ा गया!' : 'Added to cart!');
+    } catch (error) {
+      toast.error(language === 'hi' ? 'कार्ट में जोड़ने में त्रुटि!' : 'Error adding to cart!');
+    }
   };
 
   return (

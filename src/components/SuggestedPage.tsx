@@ -40,14 +40,18 @@ export const SuggestedPage: React.FC = () => {
   const { addToCart } = useCart();
 
   const handleAddToCart = (item: any) => {
-    addToCart({
-      id: item.id,
-      name: item.name,
-      nameEn: item.nameEn,
-      price: item.price,
-      discount: item.discount
-    });
-    toast.success(language === 'hi' ? 'कार्ट में जोड़ा गया!' : 'Added to cart!');
+    try {
+      addToCart({
+        id: item.id,
+        name: item.name,
+        nameEn: item.nameEn,
+        price: item.price,
+        discount: item.discount
+      });
+      toast.success(language === 'hi' ? 'कार्ट में जोड़ा गया!' : 'Added to cart!');
+    } catch (error) {
+      toast.error(language === 'hi' ? 'कार्ट में जोड़ने में त्रुटि!' : 'Error adding to cart!');
+    }
   };
 
   const ItemCard = ({ item, icon: Icon, badgeText }: any) => (

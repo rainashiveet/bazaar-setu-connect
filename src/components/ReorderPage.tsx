@@ -57,27 +57,35 @@ export const ReorderPage: React.FC = () => {
   };
 
   const handleReorder = (order: typeof recentOrders[0]) => {
-    order.items.forEach(item => {
-      for (let i = 0; i < item.quantity; i++) {
-        addToCart({
-          id: item.id,
-          name: item.name,
-          nameEn: item.nameEn,
-          price: item.price
-        });
-      }
-    });
-    toast.success(language === 'hi' ? 'ऑर्डर फिर से जोड़ा गया!' : 'Order added to cart!');
+    try {
+      order.items.forEach(item => {
+        for (let i = 0; i < item.quantity; i++) {
+          addToCart({
+            id: item.id,
+            name: item.name,
+            nameEn: item.nameEn,
+            price: item.price
+          });
+        }
+      });
+      toast.success(language === 'hi' ? 'ऑर्डर फिर से जोड़ा गया!' : 'Order added to cart!');
+    } catch (error) {
+      toast.error(language === 'hi' ? 'दोबारा ऑर्डर करने में त्रुटि!' : 'Error reordering!');
+    }
   };
 
   const handleAddToCart = (item: typeof frequentlyOrdered[0]) => {
-    addToCart({
-      id: item.id,
-      name: item.name,
-      nameEn: item.nameEn,
-      price: item.price
-    });
-    toast.success(language === 'hi' ? 'कार्ट में जोड़ा गया!' : 'Added to cart!');
+    try {
+      addToCart({
+        id: item.id,
+        name: item.name,
+        nameEn: item.nameEn,
+        price: item.price
+      });
+      toast.success(language === 'hi' ? 'कार्ट में जोड़ा गया!' : 'Added to cart!');
+    } catch (error) {
+      toast.error(language === 'hi' ? 'कार्ट में जोड़ने में त्रुटि!' : 'Error adding to cart!');
+    }
   };
 
   return (

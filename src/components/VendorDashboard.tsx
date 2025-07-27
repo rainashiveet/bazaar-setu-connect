@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -41,6 +41,18 @@ export const VendorDashboard = () => {
   const { addToCart, getTotalItems } = useCart();
   const [showVoiceOrder, setShowVoiceOrder] = useState(false);
   const [showGroupBuy, setShowGroupBuy] = useState(false);
+
+  // Listen for custom events to close modals
+  React.useEffect(() => {
+    const handleCloseGroupBuy = () => {
+      setShowGroupBuy(false);
+    };
+
+    window.addEventListener('closeGroupBuy', handleCloseGroupBuy);
+    return () => {
+      window.removeEventListener('closeGroupBuy', handleCloseGroupBuy);
+    };
+  }, []);
 
   const handleAddToCart = (item: any) => {
     console.log('Add to cart clicked for item:', item);

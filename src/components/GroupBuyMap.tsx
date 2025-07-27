@@ -168,16 +168,29 @@ const GroupBuyMap: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Group Orders List */}
-      <Card className="shadow-warm">
-        <CardHeader className="bg-gradient-primary text-primary-foreground rounded-t-lg">
-          <CardTitle className="flex items-center gap-2 text-xl">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-background rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-gradient-primary text-primary-foreground p-4 rounded-t-lg flex items-center justify-between">
+          <div className="flex items-center gap-2">
             <MapPin className="w-6 h-6" />
             {language === 'hi' ? 'पास के ग्रुप ऑर्डर' : 'Nearby Group Orders'}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-4">
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              // Close the modal by going back to the dashboard
+              const event = new CustomEvent('closeGroupBuy');
+              window.dispatchEvent(event);
+            }}
+            className="text-primary-foreground hover:bg-white/20"
+          >
+            ×
+          </Button>
+        </div>
+        
+        <div className="p-6 space-y-6">
+          {/* Group Orders List */}
           <div className="grid gap-4">
             {mockGroupOrders.map((order) => (
               <Card key={order.id} className="border-2 hover:border-primary/30 transition-all duration-300">
@@ -242,91 +255,91 @@ const GroupBuyMap: React.FC = () => {
               </Card>
             ))}
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Order Details Modal */}
-      {selectedOrder && (
-        <Card className="shadow-warm border-2 border-primary/20">
-          <CardHeader className="bg-gradient-secondary text-secondary-foreground rounded-t-lg">
-            <CardTitle className="flex items-center justify-between">
-              <span>{language === 'hi' ? selectedOrder.title : selectedOrder.titleEn}</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSelectedOrder(null)}
-                className="text-secondary-foreground hover:bg-white/20"
-              >
-                ×
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <CountdownTimer expiresAt={selectedOrder.expiresAt} />
-              <span className="text-sm text-muted-foreground">
-                {language === 'hi' ? 'बचत:' : 'Savings:'} {selectedOrder.estimatedSavings}
-              </span>
-            </div>
+          {/* Order Details Modal */}
+          {selectedOrder && (
+            <Card className="shadow-warm border-2 border-primary/20">
+              <CardHeader className="bg-gradient-secondary text-secondary-foreground rounded-t-lg">
+                <CardTitle className="flex items-center justify-between">
+                  <span>{language === 'hi' ? selectedOrder.title : selectedOrder.titleEn}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedOrder(null)}
+                    className="text-secondary-foreground hover:bg-white/20"
+                  >
+                    ×
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <CountdownTimer expiresAt={selectedOrder.expiresAt} />
+                  <span className="text-sm text-muted-foreground">
+                    {language === 'hi' ? 'बचत:' : 'Savings:'} {selectedOrder.estimatedSavings}
+                  </span>
+                </div>
 
-            {/* Progress */}
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>{language === 'hi' ? 'प्रगति' : 'Progress'}</span>
-                <span>{selectedOrder.currentQuantity}/{selectedOrder.minQuantity}</span>
-              </div>
-              <div className="w-full bg-muted rounded-full h-3">
-                <div 
-                  className="bg-gradient-primary h-3 rounded-full transition-all duration-300"
-                  style={{ width: `${getProgressPercentage(selectedOrder.currentQuantity, selectedOrder.minQuantity)}%` }}
-                />
-              </div>
-            </div>
-
-            {/* Items */}
-            <div className="space-y-2">
-              <h4 className="font-semibold">{language === 'hi' ? 'आइटम्स:' : 'Items:'}</h4>
-              <div className="grid gap-2">
-                {selectedOrder.items.map((item, index) => (
-                  <div key={index} className="flex justify-between p-2 bg-muted/50 rounded">
-                    <span className="font-medium">
-                      {language === 'hi' ? item.name : item.nameEn} ({item.quantity}kg)
-                    </span>
-                    <span className="text-primary font-semibold">{item.price}</span>
+                {/* Progress */}
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span>{language === 'hi' ? 'प्रगति' : 'Progress'}</span>
+                    <span>{selectedOrder.currentQuantity}/{selectedOrder.minQuantity}</span>
                   </div>
-                ))}
-              </div>
-            </div>
+                  <div className="w-full bg-muted rounded-full h-3">
+                    <div 
+                      className="bg-gradient-primary h-3 rounded-full transition-all duration-300"
+                      style={{ width: `${getProgressPercentage(selectedOrder.currentQuantity, selectedOrder.minQuantity)}%` }}
+                    />
+                  </div>
+                </div>
 
-            {/* Vendor Contributions */}
-            <div className="space-y-2">
-              <h4 className="font-semibold">{language === 'hi' ? 'योगदान:' : 'Contributions:'}</h4>
-              <div className="space-y-2">
-                {selectedOrder.contributions.map((contribution, index) => (
-                  <div key={index} className="flex justify-between p-2 border rounded">
-                    <div>
-                      <div className="font-medium">{contribution.vendorName}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {contribution.items.join(', ')}
+                {/* Items */}
+                <div className="space-y-2">
+                  <h4 className="font-semibold">{language === 'hi' ? 'आइटम्स:' : 'Items:'}</h4>
+                  <div className="grid gap-2">
+                    {selectedOrder.items.map((item, index) => (
+                      <div key={index} className="flex justify-between p-2 bg-muted/50 rounded">
+                        <span className="font-medium">
+                          {language === 'hi' ? item.name : item.nameEn} ({item.quantity}kg)
+                        </span>
+                        <span className="text-primary font-semibold">{item.price}</span>
                       </div>
-                    </div>
-                    <div className="text-primary font-semibold">{contribution.amount}</div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
 
-            <Button
-              className="w-full"
-              variant="vendor"
-              onClick={() => handleJoinOrder(selectedOrder)}
-            >
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              {language === 'hi' ? 'इस ऑर्डर में शामिल हों' : 'Join This Order'}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+                {/* Vendor Contributions */}
+                <div className="space-y-2">
+                  <h4 className="font-semibold">{language === 'hi' ? 'योगदान:' : 'Contributions:'}</h4>
+                  <div className="space-y-2">
+                    {selectedOrder.contributions.map((contribution, index) => (
+                      <div key={index} className="flex justify-between p-2 border rounded">
+                        <div>
+                          <div className="font-medium">{contribution.vendorName}</div>
+                          <div className="text-xs text-muted-foreground">
+                            {contribution.items.join(', ')}
+                          </div>
+                        </div>
+                        <div className="text-primary font-semibold">{contribution.amount}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <Button
+                  className="w-full"
+                  variant="vendor"
+                  onClick={() => handleJoinOrder(selectedOrder)}
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  {language === 'hi' ? 'इस ऑर्डर में शामिल हों' : 'Join This Order'}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

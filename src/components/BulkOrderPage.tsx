@@ -98,20 +98,28 @@ export const BulkOrderPage: React.FC = () => {
       return;
     }
 
-    for (let i = 0; i < quantity; i++) {
-      addToCart({
-        id: item.id,
-        name: item.name,
-        nameEn: item.nameEn,
-        price: item.bulkPrice
-      });
+    try {
+      for (let i = 0; i < quantity; i++) {
+        addToCart({
+          id: item.id,
+          name: item.name,
+          nameEn: item.nameEn,
+          price: item.bulkPrice
+        });
+      }
+      
+      toast.success(
+        language === 'hi' 
+          ? `${quantity} ${item.name} कार्ट में जोड़ा गया! कार्ट से ऑर्डर करें।`
+          : `${quantity} ${item.nameEn} added to cart! Go to cart to place order.`
+      );
+    } catch (error) {
+      toast.error(
+        language === 'hi' 
+          ? 'कार्ट में जोड़ने में त्रुटि!'
+          : 'Error adding to cart!'
+      );
     }
-    
-    toast.success(
-      language === 'hi' 
-        ? `${quantity} ${item.name} थोक कार्ट में जोड़ा गया!`
-        : `${quantity} ${item.nameEn} added to bulk cart!`
-    );
   };
 
   const calculateSavings = (item: typeof bulkItems[0], quantity: number) => {
@@ -238,7 +246,7 @@ export const BulkOrderPage: React.FC = () => {
                       className="w-full"
                       disabled={quantity < item.minQuantity}
                     >
-                      {language === 'hi' ? 'थोक कार्ट में जोड़ें' : 'Add to Bulk Cart'}
+                      {language === 'hi' ? 'कार्ट में जोड़ें' : 'Add to Cart'}
                     </Button>
                   </CardContent>
                 </Card>

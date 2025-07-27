@@ -14,13 +14,15 @@ import {
   Star,
   Package,
   LogOut,
-  Map
+  Map,
+  User
 } from "lucide-react";
 import { toast } from "sonner";
 import GroupBuyMap from "./GroupBuyMap";
 import { Cart } from "./Cart";
 import { VoiceOrder } from "./VoiceOrder";
 import { NotificationCenter } from "./NotificationCenter";
+import { ProfileDropdown } from "./ProfileDropdown";
 
 const suggestedItems = [
   { id: 1, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg', trending: true, discount: '10% off' },
@@ -43,6 +45,7 @@ export const VendorDashboard = () => {
   const [showVoiceOrder, setShowVoiceOrder] = useState(false);
   const [showGroupBuy, setShowGroupBuy] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   // Listen for custom events to close modals
   React.useEffect(() => {
@@ -117,6 +120,14 @@ export const VendorDashboard = () => {
               <span className="absolute -top-1 -right-1 bg-warning text-warning-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 3
               </span>
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setShowProfile(true)}
+              className="text-primary-foreground hover:bg-white/20"
+            >
+              <User className="w-5 h-5" />
             </Button>
             <Button 
               variant="ghost" 
@@ -209,6 +220,9 @@ export const VendorDashboard = () => {
 
         {/* Notification Center Modal */}
         {showNotifications && <NotificationCenter onClose={() => setShowNotifications(false)} />}
+
+        {/* Profile Dropdown */}
+        {showProfile && <ProfileDropdown onClose={() => setShowProfile(false)} />}
 
         {/* Cart */}
         <Cart />

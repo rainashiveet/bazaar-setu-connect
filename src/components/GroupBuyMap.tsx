@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useCart } from "@/contexts/CartContext";
 import { Clock, Users, MapPin, ShoppingCart, Timer } from "lucide-react";
 import { toast } from "sonner";
 
@@ -136,6 +137,7 @@ const CountdownTimer: React.FC<{ expiresAt: Date }> = ({ expiresAt }) => {
 
 const GroupBuyMap: React.FC = () => {
   const { language } = useLanguage();
+  const { addToCart } = useCart();
   const [selectedOrder, setSelectedOrder] = useState<GroupOrder | null>(null);
 
   const handleJoinOrder = (order: GroupOrder) => {
@@ -148,9 +150,12 @@ const GroupBuyMap: React.FC = () => {
       price: item.price,
     }));
     
+    // Actually add items to cart
+    itemsToAdd.forEach(item => addToCart(item));
+    
     toast.success(language === 'hi' 
-      ? `${order.title} में शामिल हो गए! कार्ट में आइटम्स जोड़े गए।` 
-      : `Joined ${order.titleEn}! Items added to cart.`
+      ? `${order.title} में शामिल हो गए! ${itemsToAdd.length} आइटम्स कार्ट में जोड़े गए।` 
+      : `Joined ${order.titleEn}! ${itemsToAdd.length} items added to cart.`
     );
   };
 

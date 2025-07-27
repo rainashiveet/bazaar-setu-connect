@@ -58,15 +58,16 @@ export const VoiceOrder: React.FC<VoiceOrderProps> = ({ onClose }) => {
   const processVoiceOrder = (text: string) => {
     // Mock processing - in real app, this would use AI to parse the voice input
     const mockItems = [
-      { id: 1, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg' },
-      { id: 2, name: 'आलू', nameEn: 'Potatoes', price: '₹20/kg' },
-      { id: 3, name: 'टमाटर', nameEn: 'Tomatoes', price: '₹30/kg' },
-      { id: 4, name: 'तेल', nameEn: 'Oil', price: '₹120/L' },
-      { id: 5, name: 'आटा', nameEn: 'Flour', price: '₹35/kg' },
+      { id: 101, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg' },
+      { id: 102, name: 'आलू', nameEn: 'Potatoes', price: '₹20/kg' },
+      { id: 103, name: 'टमाटर', nameEn: 'Tomatoes', price: '₹30/kg' },
+      { id: 104, name: 'तेल', nameEn: 'Oil', price: '₹120/L' },
+      { id: 105, name: 'आटा', nameEn: 'Flour', price: '₹35/kg' },
     ];
 
     // Add 2-3 random items based on voice input
-    const itemsToAdd = mockItems.slice(0, Math.floor(Math.random() * 3) + 1);
+    const numItems = Math.floor(Math.random() * 3) + 1;
+    const itemsToAdd = mockItems.slice(0, numItems);
     
     itemsToAdd.forEach(item => {
       addToCart(item);

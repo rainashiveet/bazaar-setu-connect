@@ -43,6 +43,7 @@ export const VendorDashboard = () => {
   const [showGroupBuy, setShowGroupBuy] = useState(false);
 
   const handleAddToCart = (item: any) => {
+    console.log('Add to cart clicked for item:', item);
     addToCart(item);
     toast.success(`${language === 'hi' ? item.name : item.nameEn} ${language === 'hi' ? 'कार्ट में जोड़ा गया' : 'added to cart'}`);
   };
@@ -50,19 +51,24 @@ export const VendorDashboard = () => {
   const handleReorder = (order: any) => {
     // Add mock items from the order to cart
     const mockItems = [
-      { id: 1, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg' },
-      { id: 2, name: 'आलू', nameEn: 'Potatoes', price: '₹20/kg' },
+      { id: 201, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg' },
+      { id: 202, name: 'आलू', nameEn: 'Potatoes', price: '₹20/kg' },
+      { id: 203, name: 'टमाटर', nameEn: 'Tomatoes', price: '₹30/kg' },
     ];
     mockItems.forEach(item => addToCart(item));
     toast.success(`${language === 'hi' ? 'फिर से ऑर्डर किया गया:' : 'Reordered:'} ${language === 'hi' ? order.items : order.itemsEn}`);
   };
 
   const handleVoiceOrder = () => {
+    console.log('Voice order button clicked');
     setShowVoiceOrder(true);
+    toast.info(language === 'hi' ? 'वॉइस ऑर्डर खोला गया' : 'Voice order opened');
   };
 
   const handleGroupBuy = () => {
+    console.log('Group buy button clicked');
     setShowGroupBuy(true);
+    toast.info(language === 'hi' ? 'ग्रुप खरीदारी खोली गई' : 'Group buy opened');
   };
 
   return (
@@ -112,7 +118,7 @@ export const VendorDashboard = () => {
             className="h-24 flex-col gap-2"
           >
             <Mic className="w-8 h-8" />
-            <span className="text-base">{t('vendor.voice_order')}</span>
+            <span className="text-base">{language === 'hi' ? 'आवाज से ऑर्डर करें' : 'Voice Order'}</span>
           </Button>
           <Button 
             variant="supplier" 
@@ -121,7 +127,7 @@ export const VendorDashboard = () => {
             className="h-24 flex-col gap-2"
           >
             <Users className="w-8 h-8" />
-            <span className="text-base">{t('vendor.group_buy')}</span>
+            <span className="text-base">{language === 'hi' ? 'ग्रुप खरीदारी' : 'Group Buy'}</span>
           </Button>
         </div>
 
@@ -130,7 +136,7 @@ export const VendorDashboard = () => {
           <CardHeader className="bg-gradient-primary text-primary-foreground rounded-t-lg">
             <CardTitle className="flex items-center gap-2 text-xl">
               <Star className="w-6 h-6" />
-              {t('vendor.suggested')}
+              {language === 'hi' ? 'सुझावित आइटम' : 'Suggested Items'}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4">
@@ -190,7 +196,7 @@ export const VendorDashboard = () => {
           <CardHeader className="bg-gradient-secondary text-secondary-foreground rounded-t-lg">
             <CardTitle className="flex items-center gap-2 text-xl">
               <RotateCcw className="w-6 h-6" />
-              {t('vendor.reorder')}
+              {language === 'hi' ? 'फिर से ऑर्डर करें' : 'Reorder'}
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4">

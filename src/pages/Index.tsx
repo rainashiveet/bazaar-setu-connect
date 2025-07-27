@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { CartProvider } from "@/contexts/CartContext";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { LandingPage } from "@/components/LandingPage";
 import { LoginForm } from "@/components/LoginForm";
@@ -31,10 +32,12 @@ const Index = () => {
   return (
     <LanguageProvider>
       <AuthProvider>
-        <div className="relative">
-          <LanguageToggle />
-          <AppContent />
-        </div>
+        <CartProvider>
+          <div className="relative">
+            <LanguageToggle />
+            <AppContent />
+          </div>
+        </CartProvider>
       </AuthProvider>
     </LanguageProvider>
   );

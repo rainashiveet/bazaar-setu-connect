@@ -139,9 +139,18 @@ const GroupBuyMap: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<GroupOrder | null>(null);
 
   const handleJoinOrder = (order: GroupOrder) => {
+    // Mock joining the group order - add some items to cart
+    const orderIdNum = parseInt(order.id);
+    const itemsToAdd = order.items.slice(0, 2).map((item, index) => ({
+      id: orderIdNum * 100 + index,
+      name: item.name,
+      nameEn: item.nameEn,
+      price: item.price,
+    }));
+    
     toast.success(language === 'hi' 
-      ? `${order.title} में शामिल हो गए!` 
-      : `Joined ${order.titleEn}!`
+      ? `${order.title} में शामिल हो गए! कार्ट में आइटम्स जोड़े गए।` 
+      : `Joined ${order.titleEn}! Items added to cart.`
     );
   };
 

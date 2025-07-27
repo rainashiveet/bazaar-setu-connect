@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
 import { 
   ShoppingCart, 
   RotateCcw, 
@@ -16,6 +18,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import GroupBuyMap from "./GroupBuyMap";
+import { Cart } from "./Cart";
+import { VoiceOrder } from "./VoiceOrder";
 
 const suggestedItems = [
   { id: 1, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg', trending: true, discount: '10% off' },
@@ -34,21 +38,31 @@ const recentOrders = [
 export const VendorDashboard = () => {
   const { t, language } = useLanguage();
   const { user, logout } = useAuth();
+  const { addToCart, getTotalItems } = useCart();
+  const [showVoiceOrder, setShowVoiceOrder] = useState(false);
+  const [showGroupBuy, setShowGroupBuy] = useState(false);
 
   const handleAddToCart = (item: any) => {
-    toast.success(`${language === 'hi' ? item.name : item.nameEn} added to cart`);
+    addToCart(item);
+    toast.success(`${language === 'hi' ? item.name : item.nameEn} ${language === 'hi' ? 'कार्ट में जोड़ा गया' : 'added to cart'}`);
   };
 
   const handleReorder = (order: any) => {
-    toast.success(`Reordering: ${language === 'hi' ? order.items : order.itemsEn}`);
+    // Add mock items from the order to cart
+    const mockItems = [
+      { id: 1, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg' },
+      { id: 2, name: 'आलू', nameEn: 'Potatoes', price: '₹20/kg' },
+    ];
+    mockItems.forEach(item => addToCart(item));
+    toast.success(`${language === 'hi' ? 'फिर से ऑर्डर किया गया:' : 'Reordered:'} ${language === 'hi' ? order.items : order.itemsEn}`);
   };
 
   const handleVoiceOrder = () => {
-    toast.info("Voice ordering will be available soon!");
+    setShowVoiceOrder(true);
   };
 
   const handleGroupBuy = () => {
-    toast.info("Finding nearby vendors for group buying...");
+    setShowGroupBuy(true);
   };
 
   return (
@@ -65,6 +79,14 @@ export const VendorDashboard = () => {
             </p>
           </div>
           <div className="flex gap-2">
+            <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20 relative">
+              <ShoppingCart className="w-5 h-5" />
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-1 -right-1 bg-warning text-warning-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {getTotalItems()}
+                </span>
+              )}
+            </Button>
             <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20">
               <Bell className="w-5 h-5" />
             </Button>
@@ -154,8 +176,14 @@ export const VendorDashboard = () => {
           </CardContent>
         </Card>
 
+        {/* Voice Order Modal */}
+        {showVoiceOrder && <VoiceOrder onClose={() => setShowVoiceOrder(false)} />}
+
+        {/* Cart */}
+        <Cart />
+
         {/* Group Buy Map */}
-        <GroupBuyMap />
+        {showGroupBuy && <GroupBuyMap />}
 
         {/* Recent Orders - Quick Reorder */}
         <Card className="shadow-warm">

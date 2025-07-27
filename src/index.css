@@ -8,56 +8,56 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* BazaarSetu Design System - Inspired by Indian marketplace */
-    --background: 45 15% 97%;
-    --foreground: 28 25% 15%;
+    /* BazaarSetu Design System - Modern Indian marketplace */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 28 25% 15%;
+    --card: 222 84% 5%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 28 25% 15%;
+    --popover: 222 84% 5%;
+    --popover-foreground: 210 40% 98%;
 
-    /* Saffron Orange - Primary brand color */
-    --primary: 18 100% 60%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 18 85% 70%;
+    /* Electric Blue - Modern primary */
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+    --primary-glow: 217 76% 70%;
 
-    /* Forest Green - Trust and growth */
-    --secondary: 90 65% 25%;
-    --secondary-foreground: 0 0% 100%;
+    /* Emerald Green - Success and growth */
+    --secondary: 158 64% 52%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 45 25% 92%;
-    --muted-foreground: 28 15% 55%;
+    --muted: 217 32% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    /* Terracotta accent */
-    --accent: 25 70% 50%;
-    --accent-foreground: 0 0% 100%;
+    /* Purple accent */
+    --accent: 263 70% 50%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 45 20% 85%;
-    --input: 45 20% 90%;
-    --ring: 18 100% 60%;
+    --border: 217 32% 17%;
+    --input: 217 32% 17%;
+    --ring: 217 91% 60%;
 
     /* Success green for suppliers */
-    --success: 120 60% 40%;
-    --success-foreground: 0 0% 100%;
+    --success: 158 64% 52%;
+    --success-foreground: 222 47% 11%;
 
-    /* Warning amber for alerts */
-    --warning: 45 100% 55%;
-    --warning-foreground: 28 25% 15%;
+    /* Warning orange for alerts */
+    --warning: 32 95% 44%;
+    --warning-foreground: 210 40% 98%;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(18 100% 60%), hsl(25 70% 50%));
-    --gradient-secondary: linear-gradient(135deg, hsl(90 65% 25%), hsl(120 60% 40%));
-    --gradient-warm: linear-gradient(180deg, hsl(45 15% 97%), hsl(45 25% 94%));
+    /* Modern gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(263 70% 50%));
+    --gradient-secondary: linear-gradient(135deg, hsl(158 64% 52%), hsl(217 91% 60%));
+    --gradient-warm: linear-gradient(180deg, hsl(222 47% 11%), hsl(217 32% 17%));
     
-    /* Shadows with brand colors */
-    --shadow-warm: 0 4px 20px hsl(18 100% 60% / 0.15);
-    --shadow-success: 0 4px 20px hsl(120 60% 40% / 0.15);
-    --shadow-elegant: 0 10px 40px hsl(28 25% 15% / 0.1);
+    /* Modern shadows */
+    --shadow-warm: 0 8px 32px hsl(217 91% 60% / 0.15);
+    --shadow-success: 0 8px 32px hsl(158 64% 52% / 0.15);
+    --shadow-elegant: 0 20px 60px hsl(222 47% 11% / 0.3);
 
     /* Animation */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -65,14 +65,14 @@ All colors MUST be HSL.
 
     --radius: 0.75rem;
 
-    --sidebar-background: 45 15% 97%;
-    --sidebar-foreground: 28 25% 15%;
-    --sidebar-primary: 18 100% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 45 25% 92%;
-    --sidebar-accent-foreground: 28 25% 15%;
-    --sidebar-border: 45 20% 85%;
-    --sidebar-ring: 18 100% 60%;
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 32% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 32% 17%;
+    --sidebar-ring: 217 91% 60%;
   }
 
   .dark {

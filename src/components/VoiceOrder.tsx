@@ -69,10 +69,27 @@ export const VoiceOrder: React.FC<VoiceOrderProps> = ({ onClose }) => {
   }, [isListening, language]);
 
   const processVoiceOrder = (text: string) => {
+    // Check for weather-based smart suggestions first
+    const lowerText = text.toLowerCase();
+    if (lowerText.includes('आज क्या खरीदूं') || lowerText.includes('what should i buy today') || 
+        lowerText.includes('what to buy') || lowerText.includes('क्या खरीदना चाहिए')) {
+      
+      // Mock weather-based suggestions
+      const weatherSuggestions = [
+        { id: 201, name: 'कुल्फी', nameEn: 'Kulfi', price: '₹5/piece', reason: 'गर्मी के लिए बेस्ट' },
+        { id: 202, name: 'अदरक', nameEn: 'Ginger', price: '₹100/kg', reason: 'बारिश के लिए अच्छा' },
+        { id: 203, name: 'ठंडे पेय', nameEn: 'Cold Drinks', price: '₹15/bottle', reason: 'गर्मी में डिमांड ज्यादा' }
+      ];
+      
+      weatherSuggestions.forEach(item => addToCart(item));
+      toast.success(language === 'hi' ? 'मौसम के अनुसार सुझाव जोड़े गए!' : 'Weather-based suggestions added!');
+      return;
+    }
+
     // Enhanced AI-like processing with better item matching
     const allItems = [
-      { id: 101, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg', keywords: ['प्याज', 'onion', 'onions', 'pyaaz', 'pyaj'] },
-      { id: 102, name: 'आलू', nameEn: 'Potatoes', price: '₹20/kg', keywords: ['आलू', 'potato', 'potatoes', 'aloo', 'alu'] },
+      { id: 101, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg', keywords: ['प्याज', 'onion', 'onions', 'pyaaz', 'pyaj', 'kanda'] },
+      { id: 102, name: 'आलू', nameEn: 'Potatoes', price: '₹20/kg', keywords: ['आलू', 'potato', 'potatoes', 'aloo', 'alu', 'batata'] },
       { id: 103, name: 'टमाटर', nameEn: 'Tomatoes', price: '₹30/kg', keywords: ['टमाटर', 'tomato', 'tomatoes', 'tamatar', 'tamater'] },
       { id: 104, name: 'तेल', nameEn: 'Oil', price: '₹120/L', keywords: ['तेल', 'oil', 'cooking oil', 'tel'] },
       { id: 105, name: 'आटा', nameEn: 'Flour', price: '₹35/kg', keywords: ['आटा', 'flour', 'wheat flour', 'atta', 'aata'] },
@@ -81,33 +98,58 @@ export const VoiceOrder: React.FC<VoiceOrderProps> = ({ onClose }) => {
       { id: 108, name: 'चीनी', nameEn: 'Sugar', price: '₹40/kg', keywords: ['चीनी', 'sugar', 'cheeni', 'chini'] },
       { id: 109, name: 'नमक', nameEn: 'Salt', price: '₹20/kg', keywords: ['नमक', 'salt', 'namak'] },
       { id: 110, name: 'हल्दी', nameEn: 'Turmeric', price: '₹150/kg', keywords: ['हल्दी', 'turmeric', 'haldi'] },
-      { id: 111, name: 'धनिया', nameEn: 'Coriander', price: '₹60/kg', keywords: ['धनिया', 'coriander', 'dhania'] },
-      { id: 112, name: 'मिर्च', nameEn: 'Chili', price: '₹80/kg', keywords: ['मिर्च', 'chili', 'mirch', 'pepper'] },
-      { id: 113, name: 'अदरक', nameEn: 'Ginger', price: '₹100/kg', keywords: ['अदरक', 'ginger', 'adrak'] }
+      { id: 111, name: 'धनिया', nameEn: 'Coriander', price: '₹60/kg', keywords: ['धनिया', 'coriander', 'dhania', 'cilantro'] },
+      { id: 112, name: 'मिर्च', nameEn: 'Chili', price: '₹80/kg', keywords: ['मिर्च', 'chili', 'mirch', 'pepper', 'हरी मिर्च'] },
+      { id: 113, name: 'अदरक', nameEn: 'Ginger', price: '₹100/kg', keywords: ['अदरक', 'ginger', 'adrak'] },
+      // Weather-specific items
+      { id: 114, name: 'कुल्फी', nameEn: 'Kulfi', price: '₹5/piece', keywords: ['कुल्फी', 'kulfi', 'ice cream'] },
+      { id: 115, name: 'चाय', nameEn: 'Tea', price: '₹200/kg', keywords: ['चाय', 'tea', 'chai'] },
+      { id: 116, name: 'पकौड़ा सामग्री', nameEn: 'Pakora Mix', price: '₹50/kg', keywords: ['पकौड़ा', 'pakora', 'fritter'] }
     ];
 
-    // Advanced matching with partial word detection
-    const lowerText = text.toLowerCase();
+    // Quantity detection with enhanced patterns
+    const quantityRegex = /(\d+(?:\.\d+)?)\s*(kg|kilo|किलो|gram|ग्राम|liter|लीटर|piece|पीस)/gi;
+    const quantities: {[key: string]: string} = {};
+    let match;
+    
+    while ((match = quantityRegex.exec(text)) !== null) {
+      const [fullMatch, amount, unit] = match;
+      quantities[match.index] = `${amount} ${unit}`;
+    }
+
+    // Advanced matching with partial word detection and fuzzy matching
     const matchedItems: any[] = [];
     
     allItems.forEach(item => {
       const isMatched = item.keywords.some(keyword => {
         const keywordLower = keyword.toLowerCase();
-        // Check for exact match or partial match (at least 3 characters)
+        // Check for exact match, partial match, or fuzzy match
         return lowerText.includes(keywordLower) || 
-               (keywordLower.length >= 3 && lowerText.includes(keywordLower.substring(0, 3)));
+               (keywordLower.length >= 3 && lowerText.includes(keywordLower.substring(0, 3))) ||
+               // Phonetic matching for common mispronunciations
+               (keyword === 'प्याज' && (lowerText.includes('pyaz') || lowerText.includes('piaz'))) ||
+               (keyword === 'आलू' && (lowerText.includes('aaloo') || lowerText.includes('potato'))) ||
+               (keyword === 'टमाटर' && (lowerText.includes('tometo') || lowerText.includes('tamato')));
       });
       
-      if (isMatched) {
-        matchedItems.push(item);
+      if (isMatched && !matchedItems.some(m => m.id === item.id)) {
+        // Add quantity if detected
+        const quantityValues = Object.values(quantities);
+        const quantity = quantityValues.length > 0 ? quantityValues[0] : '1 kg';
+        matchedItems.push({...item, quantity});
       }
     });
 
-    // If no matches found, add some popular items based on transcript content
+    // If no matches found, provide helpful suggestions
     let itemsToAdd = matchedItems;
     if (matchedItems.length === 0) {
-      // Fallback to common items
-      itemsToAdd = allItems.slice(0, 3);
+      // Don't add fallback items, instead give feedback
+      toast.info(
+        language === 'hi' 
+          ? 'कोई आइटम नहीं मिला। कृपया स्पष्ट रूप से बोलें या "आज क्या खरीदूं" पूछें।'
+          : 'No items found. Please speak clearly or ask "what should I buy today".'
+      );
+      return;
     }
     
     // Add matched items to cart
@@ -115,12 +157,16 @@ export const VoiceOrder: React.FC<VoiceOrderProps> = ({ onClose }) => {
       addToCart(item);
     });
 
-    // Enhanced success message with item names
-    const itemNames = itemsToAdd.map(item => language === 'hi' ? item.name : item.nameEn);
+    // Enhanced success message with item names and quantities
+    const itemDetails = itemsToAdd.map(item => {
+      const name = language === 'hi' ? item.name : item.nameEn;
+      return item.quantity ? `${name} (${item.quantity})` : name;
+    });
+    
     toast.success(
       language === 'hi' 
-        ? `${itemsToAdd.length} आइटम जोड़े गए: ${itemNames.join(', ')}`
-        : `${itemsToAdd.length} items added: ${itemNames.join(', ')}`
+        ? `${itemsToAdd.length} आइटम जोड़े गए: ${itemDetails.join(', ')}`
+        : `${itemsToAdd.length} items added: ${itemDetails.join(', ')}`
     );
   };
 
@@ -202,12 +248,20 @@ export const VoiceOrder: React.FC<VoiceOrderProps> = ({ onClose }) => {
               </div>
             )}
 
-            <p className="text-sm text-muted-foreground mb-4">
-              {language === 'hi' 
-                ? 'बटन दबाएं और अपना ऑर्डर बोलें'
-                : 'Press the button and speak your order'
-              }
-            </p>
+            <div className="space-y-2 text-sm text-muted-foreground mb-4">
+              <p>
+                {language === 'hi' 
+                  ? 'बटन दबाएं और अपना ऑर्डर बोलें'
+                  : 'Press the button and speak your order'
+                }
+              </p>
+              <p className="text-xs">
+                {language === 'hi' 
+                  ? 'कहें: "2 किलो प्याज और 1 किलो आलू" या "आज क्या खरीदूं?"'
+                  : 'Say: "2 kg onions and 1 kg potatoes" or "what should I buy today?"'
+                }
+              </p>
+            </div>
 
             {transcript && (
               <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-dashed border-2 border-primary/30 animate-fade-in">

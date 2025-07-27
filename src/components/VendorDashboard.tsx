@@ -15,7 +15,9 @@ import {
   Package,
   LogOut,
   Map,
-  User
+  User,
+  Cloud,
+  Lightbulb
 } from "lucide-react";
 import { toast } from "sonner";
 import GroupBuyMap from "./GroupBuyMap";
@@ -23,6 +25,9 @@ import { Cart } from "./Cart";
 import { VoiceOrder } from "./VoiceOrder";
 import { NotificationCenter } from "./NotificationCenter";
 import { ProfileDropdown } from "./ProfileDropdown";
+import { WeatherWidget } from "./WeatherWidget";
+import { SmartBuyingAdvice } from "./SmartBuyingAdvice";
+import { ReferEarn } from "./ReferEarn";
 
 const suggestedItems = [
   { id: 1, name: 'प्याज', nameEn: 'Onions', price: '₹25/kg', trending: true, discount: '10% off' },
@@ -93,7 +98,7 @@ export const VendorDashboard = () => {
       {/* Header */}
       <div className="bg-gradient-primary p-4 shadow-warm">
         <div className="container mx-auto flex justify-between items-center">
-          <div>
+          <div className="flex-1">
             <h1 className="text-2xl font-bold text-primary-foreground">
               {t('vendor.welcome')}, {user?.name}!
             </h1>
@@ -101,6 +106,12 @@ export const VendorDashboard = () => {
               {new Date().toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-IN')}
             </p>
           </div>
+          
+          {/* Weather Widget in header */}
+          <div className="hidden lg:block mr-4">
+            <WeatherWidget />
+          </div>
+          
           <div className="flex gap-2">
             <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-white/20 relative">
               <ShoppingCart className="w-5 h-5" />
@@ -142,6 +153,11 @@ export const VendorDashboard = () => {
       </div>
 
       <div className="container mx-auto p-4 space-y-6">
+        {/* Mobile Weather Widget */}
+        <div className="lg:hidden">
+          <WeatherWidget />
+        </div>
+
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-4">
           <Button 
@@ -163,6 +179,27 @@ export const VendorDashboard = () => {
             <span className="text-base">{language === 'hi' ? 'ग्रुप खरीदारी' : 'Group Buy'}</span>
           </Button>
         </div>
+
+        {/* MausamSmart Orders - Smart Buying Advice */}
+        <Card className="shadow-warm">
+          <CardHeader className="bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-t-lg">
+            <CardTitle className="flex items-center gap-2 text-xl">
+              <Lightbulb className="w-6 h-6" />
+              <div>
+                <div>{language === 'hi' ? 'स्मार्ट खरीद सलाह' : 'MausamSmart Orders'}</div>
+                <div className="text-sm opacity-80 font-normal">
+                  {language === 'hi' ? 'मौसम के अनुसार खरीदारी सुझाव' : 'Weather-based buying suggestions'}
+                </div>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            <SmartBuyingAdvice />
+          </CardContent>
+        </Card>
+
+        {/* Refer & Earn Section */}
+        <ReferEarn />
 
         {/* AI Suggested Items */}
         <Card className="shadow-warm">
